@@ -1,25 +1,44 @@
-import { Switch, Route, Redirect } from 'react-router-dom';
-import Landing from 'pages/Landing';
-import Profile from 'pages/Profile';
-import Login from 'pages/Login';
-import Register from 'pages/Register';
 
-// Font Awesome Style Sheet
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "./App.css";
+import Home from "./components/Home/Home";
+import Navbar from "./components/Navbar";
+import React from "react";
+import { useReducer } from "react";
+import { BrowserRouter, BrowserRouter as Router, Route } from "react-router-dom";
+import Footer from "./components/Footer/Footer";
+import Shop from "./components/Shop/Shop";
+import BookDetail from "./components/BookDetail/BookDetail";
+import Cart from "./components/Cart";
+import About from "./components/About";
+import CartContext from './context/CartContext'
 
-// Tailwind CSS Style Sheet
-import 'assets/styles/tailwind.css';
+function App (props) {
+  return (
+    <CartContext>
+      <Router>
+          <div className="App">
+            <Navbar />
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/shop">
+              <Shop />
+            </Route>
+            <Route exact path="/book/:id">
+              <BookDetail />
+            </Route>
+            <Route exact path="/cart">
+              <Cart />
+            </Route>
+            <Route exact path="/about">
+              <About />
+            </Route>
+            <Footer class='footer' id="footer"/>
+          </div>
 
-function App() {
-    return (
-        <Switch>
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Redirect from="*" to="/" />
-        </Switch>
-    );
+      </Router>
+    </CartContext>
+  );
 }
 
 export default App;

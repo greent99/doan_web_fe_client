@@ -1,0 +1,15 @@
+.footer{
+    display: flex;
+    justify-content: left;
+    align-items: flex-start;
+    background: #352275;
+    
+}
+
+p {
+    color:aliceblue
+}
+
+h6 {
+    color:aliceblue
+}

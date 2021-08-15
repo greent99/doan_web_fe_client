@@ -1,0 +1,20 @@
+.book-detail {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.book-detail-title {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.card-body {
+    width: 100%;
+    height: 100%;
+}
+
+#increase-btn {
+    width: 80%;
+    margin: 10px 0px;
+}

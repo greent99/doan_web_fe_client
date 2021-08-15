@@ -1,0 +1,13 @@
+.list-featured-book {
+    margin: 100px 0px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tab-featured-book{
+    margin-bottom: auto;
+}

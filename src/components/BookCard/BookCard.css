@@ -1,0 +1,6 @@
+.cardStyle {
+    display: 'block';
+    width: '30vw';
+    /* transitionDuration: '0.3s'; */
+    height: '45vw';
+}
