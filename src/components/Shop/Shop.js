@@ -7,41 +7,12 @@ import ShopContent from '../ShopContent/ShopContent'
 const axios = require('axios')
 
 export default function Shop() {
-    const [category, setCategory] = useState('')
-    const [author, setAuthor] = useState('')
-    const [rating, setRating] = useState('')
     const [sortType, setSortType] = useState('onSale')
     const [pageSize, setPageSize] = useState(20)
     const [page, setPage] = useState(1)
     const [totalItem, setTotalItem] = useState(0)
-    const [books, setBooks] = useState([])
+    const [courses, setCourses] = useState([])
     const [filterParam, setFilterParam] = useState({})
-    const [filterTitle, setFilterTitle] = useState('')
-    useEffect(() => {
-        setFilterParam({
-            category: category
-        })
-        setSortType('onSale')
-        setPageSize(20)
-        setPage(1)
-    },[category])
-    useEffect(() => {
-        setFilterParam({
-            author: author
-        })
-        setSortType('onSale')
-        setPageSize(20)
-        setPage(1)
-    },[author])
-    useEffect(() => {
-        setFilterParam({
-            rating: rating
-        })
-        setSortType('onSale')
-        setPageSize(20)
-        setPage(1)
-        setFilterTitle(`${rating} star`)
-    },[rating])
     useEffect(() => {
         setFilterParam(filterParam => ({
             ...filterParam,
@@ -53,14 +24,16 @@ export default function Shop() {
 
     useEffect(() => {
         //fetch api get book recommend
-        axios.get('http://localhost:3000/books', {
-            params: filterParam
+        axios.get('http://localhost:5000/api/courses', {
+            // params: {
+            //     page, pageSize, sortType
+            // }
         })
         .then(function (response) {
-            if(response.data.status == 200)
+            if(response.data.status === 200)
             {
-                setBooks(response.data.data)
-                setTotalItem(response.data.totalItem)
+                setCourses(response.data.dataRows)
+                setTotalItem(response.data.totalItems)
             }
         })
         .catch(function (error) {
@@ -68,15 +41,6 @@ export default function Shop() {
           })
     }, [filterParam])
     
-    const handleCategory = (category) => {
-        setCategory(category)
-    }
-    const handleAuthor = (author) => {
-        setAuthor(author)
-    }
-    const handleRating = (rating) => {
-        setRating(rating)
-    }
     const handleSort = (sortType) => {
         setSortType(sortType)
     }
@@ -95,11 +59,11 @@ export default function Shop() {
             <hr></hr>
             <div>
                 <Row>
-                    <Col sm='2'>
+                    {/* <Col sm='2'>
                         <FilterBook filterTitle = {filterTitle} setFilterTitle = {setFilterTitle} onSelectCategory = {handleCategory} onSelectAuthor = {handleAuthor} onSelectRating = {handleRating}/>
-                    </Col>
+                    </Col> */}
                     <Col>
-                        <ShopContent sortType={sortType} pageSize={pageSize} totalItem={totalItem} page={page} listBook = {books} onSelectSort = {handleSort} onSelectPageSize = {handlePageSize} onSelectPage = {handlePage}/>
+                        <ShopContent sortType={sortType} pageSize={pageSize} totalItem={totalItem} page={page} listCourse = {courses} onSelectSort = {handleSort} onSelectPageSize = {handlePageSize} onSelectPage = {handlePage}/>
                     </Col>
                 </Row>
             </div>

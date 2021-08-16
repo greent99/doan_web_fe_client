@@ -8,7 +8,7 @@ import bookimg from '../../book.jpg'
 import { Link } from 'react-router-dom';
 
 export default function BookCard(props) {
-    const url_detail = `/book/${props.item.id}`
+    const url_detail = `/courses/${props.item.id}`
     return (
         (
             <div style={{height: "100%"}}>
@@ -18,9 +18,9 @@ export default function BookCard(props) {
                         <CardBody >
                             <div class='d-flex justify-content-between flex-column' >
                                 <a href={url_detail} class="stretched-link"></a>
-                                <CardText >{props.item.book_title}</CardText>
-                                <CardSubtitle style={{color: 'blueviolet'}} tag="h6" className="mb-2 text-muted">{props.item.author.author_name}</CardSubtitle>
-                                <CardFooter>{props.item.book_price} $</CardFooter>
+                                <CardText >{props.item.name}</CardText>
+                                <CardSubtitle style={{color: 'blueviolet'}} tag="h6" className="mb-2 text-muted">{props.item.author}</CardSubtitle>
+                                <CardFooter>{props.item.price} $</CardFooter>
                             </div>
                         </CardBody>
                     </div>

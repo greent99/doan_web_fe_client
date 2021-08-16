@@ -19,8 +19,8 @@ export default function ShopContent(props) {
 
     const listPaginate = [20, 15, 10, 5]
 
-    const renderlistBook = (books) => {
-        return books.map((item, index) => {
+    const renderlistCourses = (courses) => {
+        return courses.map((item, index) => {
             return <Col sm="3">
                 <BookCard item={item} key={index}></BookCard>
             </Col>
@@ -73,7 +73,7 @@ export default function ShopContent(props) {
             </div>
             <div>
                 <Row>
-                    {renderlistBook(props.listBook)}
+                    {renderlistCourses(props.listCourse)}
                 </Row>
             </div>
             <div class='center-div'>
