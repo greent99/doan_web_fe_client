@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 import { CartContext } from "../../context/CartContext";
 import BookLogo from '../../book_logo.jpg'
+import getDataLogin from "../../utils/getDataLogin";
 
 function Navbar(props) {
   const { cartItems } = useContext(CartContext);
+  const dataLogin = getDataLogin()
+  console.log(dataLogin)
   return (
     (
       <nav id="navbar">
@@ -27,9 +30,10 @@ function Navbar(props) {
           <Link to="/about">
             <li>About</li>
           </Link>
-          <Link to="/cart">
-            <li>Cart({cartItems.length})</li>
-          </Link>
+          {dataLogin != null ? <Link to="/cart">
+            <li>Profile({cartItems.length})</li>
+          </Link> : <></>}
+          
         </ul>
       </nav>
     )

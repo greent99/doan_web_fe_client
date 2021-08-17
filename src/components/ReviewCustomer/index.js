@@ -24,17 +24,17 @@ export default function ReviewCustomer(props) {
 
     useEffect(() => {
         // get reviews of book
-        axios.get(`http://localhost:3000/books/${id}/reviews`,{
-            params: {
-                size: pageSize,
-                sortType: sortType,
-                page: page
-            }
+        axios.get(`http://localhost:5000/api/courses/${id}/reviews`,{
+            // params: {
+            //     size: pageSize,
+            //     sortType: sortType,
+            //     page: page
+            // }
         })
         .then(function (response) {
-            if(response.data.status == 200)
+            if(response.status == 200)
             {
-                setReviews(response.data.data)
+                setReviews(response.data.reviews)
                 setTotalReview(response.data.totalItem)
                 setStar1(response.data.star_1)
                 setStar2(response.data.star_2)

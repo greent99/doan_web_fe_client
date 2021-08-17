@@ -22,7 +22,7 @@ function App (props) {
             <LoginLayout exact path='/register' component={Register} />
             <HomeLayout exact path="/" component={Home} />
             <HomeLayout exact path="/shop" component={Shop} />
-            <HomeLayout exact path="/book/:id" component={BookDetail} />
+            <HomeLayout exact path="/courses/:id" component={BookDetail} />
             <HomeLayout exact path="/cart" component={Cart} />
             <Route exact path="/about" component={About} />
           </div>

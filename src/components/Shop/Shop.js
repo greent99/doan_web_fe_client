@@ -7,39 +7,36 @@ import ShopContent from '../ShopContent/ShopContent'
 const axios = require('axios')
 
 export default function Shop() {
-    const [sortType, setSortType] = useState('onSale')
+    const [sortType, setSortType] = useState({title: 'Price Asc', value: 'priceAsc'})
     const [pageSize, setPageSize] = useState(20)
     const [page, setPage] = useState(1)
     const [totalItem, setTotalItem] = useState(0)
     const [courses, setCourses] = useState([])
-    const [filterParam, setFilterParam] = useState({})
-    useEffect(() => {
-        setFilterParam(filterParam => ({
-            ...filterParam,
-            sortType: sortType,
-            size: pageSize,
-            page: page
-        }))
-    }, [sortType, pageSize, page])
+    const [category, setCategory] = useState();
+    const [keySearch, setKeySearch] = useState()
+    const [filterTitle, setFilterTitle] = useState('')
 
     useEffect(() => {
         //fetch api get book recommend
         axios.get('http://localhost:5000/api/courses', {
-            // params: {
-            //     page, pageSize, sortType
-            // }
+            params: {
+                page, pageSize, category, keySearch,
+                sortType: sortType.value
+            }
         })
-        .then(function (response) {
-            if(response.data.status === 200)
+        .then(response => {
+            if(response.status === 200)
             {
+                console.log(response.data.dataRows)
                 setCourses(response.data.dataRows)
                 setTotalItem(response.data.totalItems)
+                
             }
         })
         .catch(function (error) {
             console.log(error);
           })
-    }, [filterParam])
+    }, [sortType, page, pageSize, category, keySearch])
     
     const handleSort = (sortType) => {
         setSortType(sortType)
@@ -50,7 +47,13 @@ export default function Shop() {
     const handlePage = (page) => {
         setPage(page)
     }
-
+    const handleCategory = (category) => {
+        setCategory(category)
+    }
+    const handleSearch = (key) => {
+        setKeySearch(key)
+    }
+    
     return (
         <div class='container' style={{marginTop: 50}}>
             <div class='shop'>
@@ -59,11 +62,11 @@ export default function Shop() {
             <hr></hr>
             <div>
                 <Row>
-                    {/* <Col sm='2'>
-                        <FilterBook filterTitle = {filterTitle} setFilterTitle = {setFilterTitle} onSelectCategory = {handleCategory} onSelectAuthor = {handleAuthor} onSelectRating = {handleRating}/>
-                    </Col> */}
+                    <Col sm='2'>
+                        <FilterBook filterTitle = {filterTitle} setFilterTitle = {setFilterTitle}  onSelectCategory = {handleCategory}/>
+                    </Col>
                     <Col>
-                        <ShopContent sortType={sortType} pageSize={pageSize} totalItem={totalItem} page={page} listCourse = {courses} onSelectSort = {handleSort} onSelectPageSize = {handlePageSize} onSelectPage = {handlePage}/>
+                        <ShopContent handleSearch = {handleSearch} sortType={sortType} pageSize={pageSize} totalItem={totalItem} page={page} listCourse = {courses} onSelectSort = {handleSort} onSelectPageSize = {handlePageSize} onSelectPage = {handlePage}/>
                     </Col>
                 </Row>
             </div>

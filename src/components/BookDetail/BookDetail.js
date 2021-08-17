@@ -8,23 +8,27 @@ import BookDetailTitle from '../BookDetailTitle/BookDetailTitle'
 import ReviewCustomer from '../ReviewCustomer'
 import ReviewForm from '../ReviewForm'
 import { CartContext } from '../../context/CartContext'
+import { useHistory } from 'react-router-dom'
+import { createToast } from '../../utils/createToast'
+import getDataLogin from '../../utils/getDataLogin'
+import { ToastContainer, toast } from 'react-toastify';
 const axios = require('axios')
 
 export default function BookDetail() {
-    const {addProduct} = useContext(CartContext)
     let { id } = useParams();
-    const [book, setBook] = useState({
+    const [course, setCourse] = useState({
         author: { author_name: '' }
     })
-    const [quantity, setQuantity] = useState(1)
+    const [isLogin, setIsLogin] = useState(false)
+    const history = useHistory();
     useEffect(() => {
-        // get book detail
-        axios.get(`http://localhost:3000/books/${id}`)
-        .then(function (response) {
-            if(response.data.status == 200)
+        // get course detail
+        axios.get(`http://localhost:5000/api/courses/${id}`)
+        .then((response) => {
+            console.log(response.status)
+            if(response.status == 200)
             {
-                response.data.data.quantity = 1
-                setBook(response.data.data)
+                setCourse(response.data.course)
             }
         })
         .catch(function (error) {
@@ -32,12 +36,49 @@ export default function BookDetail() {
             console.log(error);
           })
     }, [])
-
+    const userData = getDataLogin()
+    
     useEffect(() => {
-        setBook({...book, quantity: quantity})
-    }, [quantity])
+        if(localStorage.getItem('userData'))
+            setIsLogin(true)
+    }, [])
+
+    const addToWatchList = (courseid) => {
+        axios.post(`http://localhost:5000/api/courses/${courseid}/addToWatchList`, {
+            userid: userData.user.userid
+        })
+        .then((response) => {
+            console.log(response.status)
+            if(response.status == 200)
+            {
+                alert('Add Success')
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+          })
+    }
+
+    const enrollCourse = (courseid) => {
+        axios.post(`http://localhost:5000/api/user/${userData.user.userid}/enrollCourse`, {
+            courseid
+        })
+        .then((response) => {
+            console.log(response.status)
+            if(response.status == 200)
+            {
+                alert('Enroll Success')
+            }
+        })
+        .catch(function (error) {
+            if(error.response)
+                alert(error.response.data.message)
+          })
+    }
 
     return (
+        <div>
+        <ToastContainer />
             <div class='container' style={{marginTop: 50}}>
                 <div class='d-flex justify-content-start'>
                     <h3>Category Name</h3>
@@ -46,26 +87,50 @@ export default function BookDetail() {
                 <div>
                     <Row>
                         <Col sm='8'>
-                            <BookDetailTitle book = {book} />
+                            <BookDetailTitle course = {course} />
                         </Col>
                             <Col>
                                 <Card class='card-body'>
-                                    <CardHeader>{book.book_price}$</CardHeader>
-                                    <CardBody class='d-flex flex-column justify-content-center '>
-                                        <CardTitle tag="h5">Quantity</CardTitle>
-                                        <div class='d-flex flex-row justify-content-around align-items-center'>
-                                            <Button onClick={() => {
-                                                setQuantity(quantity + 1)
-                                            }} size='lg'>+</Button>
-                                            <h5>{quantity}</h5>
-                                            { quantity == 1 ? (<Button disabled='true' onClick={() => {setQuantity(quantity - 1)}} size='lg'>-</Button>) 
-                                            : (<Button onClick={() => { setQuantity(quantity - 1) }} size='lg'>-</Button>) }
+                                    <CardHeader>{course.price}đ</CardHeader>
+                                    <CardBody class='d-flex flex-column justify-content-center'>
+                                        <div class="row justify-content-center">
+                                            {isLogin ? <Button 
+                                                style={{width: '75%', marginTop: 10}} 
+                                                onClick = {() => enrollCourse(course.id)}
+                                                size='lg'>
+                                                Eroll
+                                            </Button> 
+                                            : <Button 
+                                                style={{width: '75%', marginTop: 10}} 
+                                                onClick = {() => {
+                                                    history.push('/login')
+                                                }}
+                                                size='lg'>
+                                                Eroll
+                                            </Button>
+                                            }
                                         </div>
-                                        <Button style={{width: '75%', marginTop: 10}} 
-                                            onClick = {() => addProduct(book)}
-                                        size='lg'>Add to cart</Button>
+
+                                        <div class="row justify-content-center">
+                                        {isLogin ? <Button 
+                                            style={{width: '75%', marginTop: 10, marginBottom: 10}} 
+                                            onClick = {() => addToWatchList(course.id)}
+                                            size='sm'>
+                                            Add to Watchlist
+                                        </Button> 
+                                        : <Button 
+                                            style={{width: '75%', marginTop: 10, marginBottom: 10}} 
+                                            onClick = {() => {
+                                                history.push('/login')
+                                            }}
+                                            size='sm'>
+                                            Add to Watchlist
+                                        </Button>
+                                        }
+                                        </div>
+                                        
                                     </CardBody>
-                                    <CardFooter>Book Worm</CardFooter>
+                                    <CardFooter>Corse Shop</CardFooter>
                                 </Card>
                             </Col>
                     </Row>
@@ -73,13 +138,14 @@ export default function BookDetail() {
                 <div style={{marginTop: 50, marginBottom: 50}}>
                     <Row>
                         <Col sm='8'>
-                            <ReviewCustomer book = {book}/>
+                            <ReviewCustomer book = {course}/>
                         </Col>
                         <Col>
                             <ReviewForm />
                         </Col>
                     </Row>
                 </div>
+            </div>
             </div>
     )
 }

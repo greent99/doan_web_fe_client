@@ -22,7 +22,7 @@ export default function Login() {
                 if(response.status === 200)
                 {
                     localStorage.setItem('userData', JSON.stringify(response.data))
-                    history.push('/');
+                    history.goBack();
                 }
             })
             .catch(err => { console.log(err) })

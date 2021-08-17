@@ -1,7 +1,8 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { useForm } from "react-hook-form";
+import getDataLogin from '../../utils/getDataLogin';
 const axios = require('axios')
 
 
@@ -11,15 +12,16 @@ export default function ReviewForm() {
             rating_start: 1
         }
     });
+    const dataLogin = getDataLogin()
+    const history = useHistory();
     let { id } = useParams();
+    console.log(localStorage.getItem('userData'))
     const onSubmit = function(data){
-        data.rating_start = +data.rating_start
-        console.log(data.rating_start)
-        axios.post(`http://localhost:3000/books/${id}/addReview`, data)
+        data.userid = dataLogin.user.userid
+        axios.post(`http://localhost:5000/api/courses/${id}/addReview`, data)
         .then(function (response) {
-            if(response.data.status == 200)
+            if(response.status == 200)
             {
-                console.log('Add review success')
                 window.location.reload()
             }
         })
@@ -28,39 +30,25 @@ export default function ReviewForm() {
             console.log(error);
             })
     }
-
-
     return (
-        <div class='border' class='d-flex flex-column '>
+        <div class='border' class='d-flex flex-column'>
             <div class='d-flex justify-content-start'>
                 <h5>Write a review</h5>
             </div>
             <hr></hr>
             <div>
                 <Form onSubmit={handleSubmit(onSubmit)}>
-                    <FormGroup>
-                        <div class='d-flex justify-content-start'>
-                            
-
-
-
-
-                            
-                        </div>
-                        <Input type="text" {...register("review_title", {required: true})} id="title" />
-                        {errors.review_title && <p class='text-danger'>This field is required</p>}
-                    </FormGroup>
                     <FormGroup style={{marginTop: 20}}>
                         <div class='d-flex justify-content-start'>
-                            <Label for="exampleText">Details please! Your review helps orther shoppers.</Label>
+                            <Label for="exampleText">Comment</Label>
                         </div>
-                        <Input type="textarea" {...register("review_details")} id="detail" />
+                        <Input type="textarea" {...register("comment")} id="comment" />
                     </FormGroup>
                     <FormGroup style={{marginTop: 30}}>
                         <div class='d-flex justify-content-start'>
                             <Label for="star">Select</Label>
                         </div>
-                        <Input type="select" {...register("rating_start")} id="star">
+                        <Input type="select" {...register("point")} id="point">
                             <option value='1'>1 Star</option>
                             <option value='2'>2 Star</option>
                             <option value='3'>3 Star</option>
@@ -68,7 +56,18 @@ export default function ReviewForm() {
                             <option value='5'>5 Star</option>
                         </Input>
                     </FormGroup>
-                    <Button style={{marginTop: 10}} type="submit">Submit</Button>
+                    {dataLogin ? <Button style={{marginTop: 10}} type="submit">Submit</Button>
+                    : <Button 
+                        style={{marginTop: 10}} 
+                        type="button"
+                        onClick={() => {
+                            history.push('/login')
+                        }}
+                        >
+                        Submit
+                    </Button>
+                    }
+                    
                 </Form>
             </div>
         </div>

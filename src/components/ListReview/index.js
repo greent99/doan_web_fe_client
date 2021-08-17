@@ -5,15 +5,14 @@ export default function ListReview(props) {
 
     const renderlistReview = (reviews) => {
         return reviews.map((item, index) => {
-            const date = new Date(item.review_date)
+            const date = new Date(item.createddat)
             const dateFormat = date.toLocaleDateString("en-US")
             return <div key={index} style={{marginTop: 10}} class='d-flex flex-column justify-content-start'>
                 <div class='d-flex'>
-                    <h5 >{item.review_title} </h5>
-                    <p class='text-primary'>   | {item.rating_start} star</p>
+                    <h5 >{item.point}</h5>
                 </div>
                 <div class='d-flex justify-content-start'>
-                    <p class='text-primary'>{item.review_details}</p>
+                    <p class='text-primary'>{item.comment}</p>
                 </div>
                 <div class='d-flex justify-content-start'>
                     <p class='text-primary'>{dateFormat}</p>

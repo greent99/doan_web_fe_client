@@ -4,9 +4,10 @@ import '../../App.css'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col } from 'reactstrap';
 import BookCard from '../BookCard';
 import Paginate from '../Paginate/Paginate';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch  } from '@fortawesome/free-solid-svg-icons'
 
 export default function ShopContent(props) {
-
     const [isOpenSort, setOpenSort] = useState(false);
     const toggle1 = () => setOpenSort(!isOpenSort);
 
@@ -14,10 +15,18 @@ export default function ShopContent(props) {
     const toggle2 = () => setOpenPaginate(!isOpenPaginate);
 
     const listSort = [
-        'onSale', 'popular', 'priceAsc', 'priceDesc'
+        {
+            title: 'Price Asc',
+            value: 'priceAsc'
+        },
+        {
+            title: 'Price Desc',
+            value: 'priceDesc'
+        }
     ]
 
     const listPaginate = [20, 15, 10, 5]
+    const [key, setKey] = useState('')
 
     const renderlistCourses = (courses) => {
         return courses.map((item, index) => {
@@ -30,8 +39,8 @@ export default function ShopContent(props) {
     const renderListSort = (listSort, props) => {
         return listSort.map(item => {
             return <DropdownItem onClick={() => {
-                props.onSelectSort(item)
-            }}>Sort by {item}</DropdownItem>
+                props.onSelectSort({title:item.title, value: item.value})
+            }}>Sort by {item.title}</DropdownItem>
         })
     }
 
@@ -42,19 +51,27 @@ export default function ShopContent(props) {
             }}>Show {item}</DropdownItem>
         })
     }
-
-    const index = (props.page - 1) * props.pageSize + 1
-
+    const handleClickSearch = (props, key) => {
+        props.handleSearch(key)
+    }
+    const handleChange = (e) => {
+        setKey(e.target.value)
+    }
     return (
         <div>
             <div class='shop-content-head'>
                 <div class='text'>
-                    <p >Showing {index}-{index + props.pageSize - 1} of {props.totalItem} books</p>
+                    <div class="input-group">
+                        <input onChange={handleChange} type="text" class="form-control" placeholder="Search" />
+                        <button onClick={() => handleClickSearch(props, key)} class="btn btn-secondary" type="button">
+                            <FontAwesomeIcon icon={faSearch} />
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <ButtonDropdown isOpen={isOpenSort} toggle={toggle1} style={{marginRight: 10}}>
                         <DropdownToggle caret size="sm">
-                            Sort by {props.sortType}
+                            Sort by {props.sortType.title}
                         </DropdownToggle>
                         <DropdownMenu>
                             {renderListSort(listSort, props)}
