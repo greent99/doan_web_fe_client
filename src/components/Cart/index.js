@@ -209,7 +209,7 @@ export default function Cart() {
                             <TableEnrollList />
                         </Row>
                     </div>
-                    : <p>oke</p>
+                    : <h5>Profile for Admin will coming soon...</h5>
                     }
 
                     { dataLogin.user && dataLogin.user.userType == 'Teacher' ?
@@ -224,7 +224,7 @@ export default function Cart() {
                                 <TableTeachList handleLesson = {handleLesson}  addCourseSuccess = {addCourseSuccess}/>
                             </Row>
                         </div>
-                    : <p>oke</p>
+                        : <></>
                     }
                 </div>
                 <br/>

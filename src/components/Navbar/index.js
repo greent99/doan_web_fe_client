@@ -31,7 +31,7 @@ function Navbar(props) {
             <li>About</li>
           </Link>
           {dataLogin != null ? <Link to="/cart">
-            <li>Profile({cartItems.length})</li>
+            <li>Profile</li>
           </Link> : <></>}
           
         </ul>

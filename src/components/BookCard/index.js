@@ -21,7 +21,7 @@ export default function BookCard(props) {
                                 <a href={url_detail} class="stretched-link"></a>
                                 <CardText className='text-primary text-center'>{props.item.name}</CardText>
                                 <CardSubtitle style={{color: 'blueviolet'}} tag="h6" className="mb-2 text-muted">{props.item.author_name}</CardSubtitle>
-                                <CardFooter>{props.item.price} $</CardFooter>
+                                <CardFooter>{props.item.price} đ</CardFooter>
                             </div>
                         </CardBody>
                     </div>

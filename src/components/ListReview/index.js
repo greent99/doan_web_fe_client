@@ -9,7 +9,7 @@ export default function ListReview(props) {
             const dateFormat = date.toLocaleDateString("en-US")
             return <div key={index} style={{marginTop: 10}} class='d-flex flex-column justify-content-start'>
                 <div class='d-flex'>
-                    <h5 >{item.point}</h5>
+                    <h5 >{item.point} Star</h5>
                 </div>
                 <div class='d-flex justify-content-start'>
                     <p class='text-primary'>{item.comment}</p>

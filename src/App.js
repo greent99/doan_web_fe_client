@@ -26,7 +26,7 @@ function App (props) {
             <HomeLayout exact path="/courses/:id" component={BookDetail} />
             <HomeLayout exact path="/cart" component={Cart} />
             <HomeLayout exact path="/courses/:id/lesson" component={ManageLesson} />
-            <Route exact path="/about" component={About} />
+            <HomeLayout exact path="/about" component={About} />
           </div>
 
       </Router>
