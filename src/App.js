@@ -12,6 +12,7 @@ import Login from './pages/Login/Login'
 import LoginLayout from "./LoginLayout";
 import HomeLayout from './HomeLayout'
 import Register from "./pages/Register/Register";
+import ManageLesson from "./components/ManageLesson";
 
 function App (props) {
   return (
@@ -24,6 +25,7 @@ function App (props) {
             <HomeLayout exact path="/shop" component={Shop} />
             <HomeLayout exact path="/courses/:id" component={BookDetail} />
             <HomeLayout exact path="/cart" component={Cart} />
+            <HomeLayout exact path="/courses/:id/lesson" component={ManageLesson} />
             <Route exact path="/about" component={About} />
           </div>
 

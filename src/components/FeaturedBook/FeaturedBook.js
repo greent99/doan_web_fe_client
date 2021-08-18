@@ -11,22 +11,22 @@ export default function FeaturedBook() {
     const [bookPopular, setbookPopular] = useState([])
     useEffect(() => {
         //fetch api get book recommend
-        axios.get('http://localhost:3000/books/getTopRecommended')
+        axios.get('http://localhost:5000/api/courses/getTopNewest')
         .then(function (response) {
-            if(response.data.status == 200)
+            if(response.status == 200)
             {
-                setbookRecommend(response.data.data)
+                setbookRecommend(response.data.dataRows)
             }
         })
         .catch(function (error) {
             console.log(error);
           })
 
-        axios.get('http://localhost:3000/books/getTopPopular')
+        axios.get('http://localhost:5000/api/courses/getTopPopular')
         .then(function (response) {
-            if(response.data.status == 200)
+            if(response.status == 200)
             {
-                setbookPopular(response.data.data)
+                setbookPopular(response.data.dataRows)
             }
         })
         .catch(function (error) {
@@ -50,7 +50,7 @@ export default function FeaturedBook() {
 
     return (
         <div class='list-featured-book'>
-            <h3>Featured Book</h3>
+            <h3>Featured Courses</h3>
             <div class="center" id='tab-featured-book'>
                 <Nav tabs>
                     <NavItem>
@@ -58,7 +58,7 @@ export default function FeaturedBook() {
                             className={classnames({ active: activeTab === '1' })}
                             onClick={() => { toggle('1'); }}
                         >
-                            Recommended
+                            Newest
                         </NavLink>
                     </NavItem>
                     <NavItem>

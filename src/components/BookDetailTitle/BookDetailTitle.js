@@ -3,12 +3,12 @@ import { useParams } from 'react-router';
 import bookimg from '../../book.jpg'
 
 export default function BookDetailTitle(props) {
-    console.log(props.course)
+    const image_url = `http://localhost:5000${props.course.imgpath}`
     return (
         <div class='d-flex justify-content-start border'>
             <div class='col-sm-4 d-flex justify-content-start'>
                 <div class='d-flex flex-column'>
-                    <img width='100%' src={bookimg} alt="Card image cap" />
+                    <img width='100%' src={image_url} alt="Card image cap" />
                     <div >
                         <p class='text-primary'>By (author) {props.course.author_name}</p>
                     </div>

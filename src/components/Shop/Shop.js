@@ -57,7 +57,7 @@ export default function Shop() {
     return (
         <div class='container' style={{marginTop: 50}}>
             <div class='shop'>
-                <h3>Books</h3>
+                <h3>Courses</h3>
             </div>
             <hr></hr>
             <div>

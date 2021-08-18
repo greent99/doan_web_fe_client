@@ -1,70 +1,196 @@
-import {React, useContext, useEffect} from 'react'
-import { Row, Button,} from 'reactstrap'
+import {React, useContext, useEffect, useState} from 'react'
+import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Table} from 'reactstrap'
 import './Cart.css'
-import bookimg from '../../book.jpg'
-import { CartContext } from '../../context/CartContext'
 import TableWatchList from '../TableWatchList/index'
 import TableEnrollList from '../TableEnrollList'
 import getDataLogin from '../../utils/getDataLogin'
+import TableTeachList from '../TableTeachList'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faPlus  } from '@fortawesome/free-solid-svg-icons'
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
 const axios = require('axios')
 
 export default function Cart() {
+    const validationSchema = yup.object().shape({
+        name: yup.string()
+          .required('Name is a required Input')
+          .max(255)
+          .test('name', 'Name do not include spaces!', (value) => {
+            if (value) {
+              return !value.includes(' ');
+            }
+            return true;
+          }),
+        author: yup.number().required('Author is a required Input'),
+        description: yup.string(),
+        status: yup.string().required('Status is a required Input').max(255),
+        price: yup.number().required('Price is a required Input').min(0),
+      });
+      const { register, handleSubmit, formState:{ errors } } = useForm({
+        resolver: yupResolver(validationSchema)
+      });
 
-    const {cartItems, increase, decrease, total, handleCheckout} = useContext(CartContext)
     const dataLogin = getDataLogin()
-    console.log(dataLogin)
 
-    const renderBookIncart = (cart) => {
-        return cart.map(item => {
-            const url_detail = `http://localhost:3001/book/${item.id}`
-            return (<tr key={item.id}>
-                <th class='d-flex justify-content-start'>
-                    <img  height='100'  src={bookimg} alt="Card image cap"/>
-                    <div class='d-flex align-items-center justify-content-center flex-column'>
-                        
-                        <h6 class='text-primary'>{item.book_title}</h6>
-                        <p class='text-primary'>{item.author.author_name}</p>
-                    </div>
-                </th>
-                <td>
-                    {item.book_price}$
-                </td>
-                <td>
-                    <div class='d-flex flex-row justify-content-around align-items-center' >
-                        <Button size='sm' onClick={() => increase(item)}>+</Button>
-                        
-                        <h5>{item.quantity}</h5>
-                        <Button size='sm' onClick={() => decrease(item)}>-</Button>
-                    </div>
-                </td>
-                <td>{Math.round(item.quantity*item.book_price * 100) / 100}$</td>
-            </tr>)
+    const [modal, setModal] = useState(false);
+    const [listCategory, setListCategory] = useState([]);
+    const [listAuthor, setListAuthor] = useState([]);
+    const [addCourseSuccess, setAddCourseSuccess] = useState(false)
+    const [courseId, setCourseId] = useState()
+
+    const toggle = () => setModal(!modal);
+
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/fields').then((response) => {
+          if (response.status === 200) setListCategory(response.data.dataRows);
+        });
+      }, []);
+      useEffect(() => {
+        axios.get('http://localhost:5000/api/user/getByRole/Teacher').then((response) => {
+          if (response.status === 200) setListAuthor(response.data.users);
+        });
+      }, []);
+
+    const renderListCategory = (categories) =>
+        categories.map((category) => <option value={category.id}>{category.name}</option>);
+    const renderListAuthor = (authors) =>
+        authors.map((author) => <option value={author.id}>{author.fullname}</option>);
+
+    const onSubmit = async (values) => {
+        console.log(values.file)
+        const formData = new FormData();
+        formData.append('file', values.file[0]);
+        formData.append('name', values.name);
+        formData.append('author', values.author);
+        formData.append('fieldid', values.field);
+        formData.append('price', values.price);
+        formData.append('description', values.description);
+        formData.append('status', values.status);
+        await axios.post(`http://localhost:5000/api/courses`, formData, {
+            headers: {
+            'Content-Type': 'multipart/form-data',
+            },
         })
-    }
-
-    const placeOrder = () =>
-    {
-        const data = {order_amount: +total, productArr: cartItems}
-        axios.post(`http://localhost:3000/orders/add`, data)
-        .then(function (response) {
-            if(response.data.status == 200)
+        .then(response => {
+            if(response.status == 200)
             {
-                handleCheckout()
+                setAddCourseSuccess(true)
+                setModal(!modal)
             }
         })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
     }
+
+    const handleLesson = (courseId) => {
+        setCourseId(courseId)
+    }
+
+    const [modalLesson, setModalLesson] = useState(false);
 
     return (
             <div class='container' style={{marginTop: 50}}>
-                {/* <div class='d-flex justify-content-start'>
-                    {cartItems.length === 0 ? <h5>Your cart is empty</h5>
-                    : <h5>Your cart: {cartItems.length} items</h5>
-                    }
-                </div> */}
+                <Modal isOpen={modal} toggle={toggle}>
+                    <ModalHeader toggle={toggle}>Add Course</ModalHeader>
+                    <ModalBody>
+                        <Form id="add-course-form" onSubmit={handleSubmit(onSubmit)}>
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="name" column sm="3">
+                                    Name<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                    <Input id="name" {...register("name")} className="form-control" />
+                                    <p>{errors.name?.message}</p>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="author" column sm="3">
+                                    Author<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                <select class="form-select" {...register("author")}>
+                                    {renderListAuthor(listAuthor)}
+                                    </select>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="Input" column sm="3">
+                                    Category<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                    <select class="form-select" {...register("field")}>
+                                        {renderListCategory(listCategory)}
+                                    </select>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="price" column sm="3">
+                                    Price<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                    <Input id="price" {...register("price")} className="form-control" />
+                                    <p>{errors.price?.message}</p>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="description" column sm="3">
+                                    Description<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                    <Input
+                                    id="description"
+                                    {...register("description")}
+                                    placeholder=""
+                                    className="form-control"
+                                    />
+                                    <p>{errors.description?.message}</p>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="description" column sm="3">
+                                    Avatar<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                    <input id="file" {...register("file")} type="file"
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup as={Row} className="mb-3">
+                                <Label htmlFor="status" column sm="3" className="mt-1">
+                                    Status<sup className="required-icon">*</sup>
+                                </Label>
+                                <Col sm="9">
+                                    <Row className="mt-2">
+                                        <div className="form-check">
+                                            <Input type="radio" id="female-gender" {...register("status")} value="Available" />
+                                            <Label htmlFor="female-gender" className="ml-3 mt-1">
+                                                Available
+                                            </Label>
+                                        </div>
+
+                                        <div className="form-check">
+                                            <Input type="radio" id="male-gender" {...register("status")} value="Not Available" />
+                                            <Label htmlFor="male-gender" className="ml-3 mt-1">
+                                            Not Available
+                                            </Label>
+                                        </div>
+                                        <p>{errors.status?.message}</p>
+                                    </Row>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
+                    <ModalFooter>
+                    <Button color="primary" type="submit" form="add-course-form">Add</Button>{' '}
+                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
                 <hr></hr>
                 <div>
                     {dataLogin.user && dataLogin.user.userType == 'Student' ?
@@ -88,11 +214,14 @@ export default function Cart() {
 
                     { dataLogin.user && dataLogin.user.userType == 'Teacher' ?
                         <div>
-                            <div class="d-flex jusfity-content-start">
-                                <h5>Your watch list</h5>
+                            <div class="d-flex justify-content-between" style={{marginBottom: '10px'}}>
+                                <h5>Course Manager</h5>
+                                <Button onClick={toggle}>
+                                    <FontAwesomeIcon icon={faPlus} /> Add Course
+                                </Button>
                             </div>
                             <Row>
-                                <TableWatchList />
+                                <TableTeachList handleLesson = {handleLesson}  addCourseSuccess = {addCourseSuccess}/>
                             </Row>
                         </div>
                     : <p>oke</p>

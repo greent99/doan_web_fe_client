@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom'
 import { createToast } from '../../utils/createToast'
 import getDataLogin from '../../utils/getDataLogin'
 import { ToastContainer, toast } from 'react-toastify';
+import ListLessonInDetail from '../ListLessonInDetail'
 const axios = require('axios')
 
 export default function BookDetail() {
@@ -23,6 +24,10 @@ export default function BookDetail() {
     const history = useHistory();
     useEffect(() => {
         // get course detail
+        axios.post(`http://localhost:5000/api/courses/${id}/increaseView`)
+        .catch(err => {
+            throw(err)
+        })
         axios.get(`http://localhost:5000/api/courses/${id}`)
         .then((response) => {
             console.log(response.status)
@@ -75,6 +80,20 @@ export default function BookDetail() {
                 alert(error.response.data.message)
           })
     }
+
+    const [checkInCourse, setCheckInCourse] = useState(false)
+    useEffect(() => {
+    
+        if(userData) {
+            axios.post(`http://localhost:5000/api/courses/${id}/checkUserInCourse`, {
+                userid: userData.user.userid
+            })
+            .then((response) => {
+                if(response.status == 200)
+                    setCheckInCourse(response.data.status)
+            })
+        }
+    })
 
     return (
         <div>
@@ -130,7 +149,7 @@ export default function BookDetail() {
                                         </div>
                                         
                                     </CardBody>
-                                    <CardFooter>Corse Shop</CardFooter>
+                                    <CardFooter>Course Academy</CardFooter>
                                 </Card>
                             </Col>
                     </Row>
@@ -138,6 +157,16 @@ export default function BookDetail() {
                 <div style={{marginTop: 50, marginBottom: 50}}>
                     <Row>
                         <Col sm='8'>
+                            {checkInCourse ? (
+                                <div style={{marginBottom: '50px'}}>
+                                    <div style={{marginBottom: '10px'}} class="d-flex justify-content-start">
+                                        <h5>List Lesson</h5>
+                                    </div>
+                                    <ListLessonInDetail />
+                                </div>
+                            )
+                            : <></>
+                            }
                             <ReviewCustomer book = {course}/>
                         </Col>
                         <Col>

@@ -98,13 +98,13 @@ export default function ReviewCustomer(props) {
                 </div>
                 <div class='d-flex justify-content-start'>
                     <p class='text-primary' style={{marginRight: 15}}>{totalReview} Reivews </p>
-                    <p >5 star({star5})</p>
-                    <p > | 4 star({star4})</p>
-                    <p > | 3 star({star3})</p>
-                    <p > | 2 star({star2})</p>
-                    <p > | 1 star({star1})</p>
+                    <p class='text-primary'>5 star({star5})</p>
+                    <p class='text-primary'> | 4 star({star4})</p>
+                    <p class='text-primary'> | 3 star({star3})</p>
+                    <p class='text-primary'> | 2 star({star2})</p>
+                    <p class='text-primary'> | 1 star({star1})</p>
                 </div>
-                <div class='d-flex justify-content-between'>
+                {/* <div class='d-flex justify-content-between'>
                     <p class='text-primary'>Showing {index}-{index+pageSize-1} of {totalReview} reviews</p>
                     <div>
                         <ButtonDropdown isOpen={isOpenSort} toggle={toggle1} style={{marginRight: 10}}>
@@ -125,7 +125,7 @@ export default function ReviewCustomer(props) {
                             </DropdownMenu>
                         </ButtonDropdown>
                     </div>
-                </div>
+                </div> */}
                 <div>
                     <ListReview totalItem = {totalReview} reviews = {reviews} pageSize = {pageSize} page = {page} onSelectPage = {handlePage}/>
                 </div>

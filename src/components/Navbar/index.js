@@ -16,7 +16,7 @@ function Navbar(props) {
           <img src={BookLogo} width='64'></img>
           <Link to="/">
             <div >
-              <p style={{fontSize: 15}}>BookWorm</p>
+              <p style={{fontSize: 15}}>Course Academy</p>
             </div>
           </Link>
         </div>
