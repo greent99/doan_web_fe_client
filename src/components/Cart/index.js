@@ -1,14 +1,18 @@
 import {React, useContext, useEffect} from 'react'
-import { Col, Row, Button, Card, CardHeader, CardFooter, CardBody,
-    CardTitle, CardText } from 'reactstrap'
+import { Row, Button,} from 'reactstrap'
 import './Cart.css'
 import bookimg from '../../book.jpg'
 import { CartContext } from '../../context/CartContext'
+import TableWatchList from '../TableWatchList/index'
+import TableEnrollList from '../TableEnrollList'
+import getDataLogin from '../../utils/getDataLogin'
 const axios = require('axios')
 
 export default function Cart() {
 
     const {cartItems, increase, decrease, total, handleCheckout} = useContext(CartContext)
+    const dataLogin = getDataLogin()
+    console.log(dataLogin)
 
     const renderBookIncart = (cart) => {
         return cart.map(item => {
@@ -56,43 +60,43 @@ export default function Cart() {
 
     return (
             <div class='container' style={{marginTop: 50}}>
-                <div class='d-flex justify-content-start'>
+                {/* <div class='d-flex justify-content-start'>
                     {cartItems.length === 0 ? <h5>Your cart is empty</h5>
                     : <h5>Your cart: {cartItems.length} items</h5>
                     }
-                </div>
+                </div> */}
                 <hr></hr>
                 <div>
-                    <Row>
-                        <Col sm='8'>
-                            <table class="table ">
-                                <thead>
-                                    <tr>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {renderBookIncart(cartItems)}
-                                </tbody>
-                            </table>
-                        </Col>
-                        <Col>
-                            <Card>
-                                <CardHeader>Cart total</CardHeader>
-                                <CardBody style={{marginTop: 30}}>
-                                    { cartItems.length > 0 ? <CardTitle tag="h5">${total}</CardTitle> 
-                                    : <CardTitle tag="h5">$0</CardTitle>
-                                    }
-                                    {cartItems.length > 0 ? <Button style={{marginTop: 30, width: '100%'}} onClick={placeOrder}>Place order</Button> 
-                                    : <Button style={{marginTop: 30, width: '100%'}} onClick={placeOrder} disabled='true'>Place order</Button>
-                                    }
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
+                    {dataLogin.user && dataLogin.user.userType == 'Student' ?
+                    <div>
+                        <div class="d-flex jusfity-content-start">
+                            <h5>Your watch list</h5>
+                        </div>
+                        <Row>
+                            <TableWatchList />
+                        </Row>
+
+                        <div class="d-flex jusfity-content-start">
+                            <h5>Your Enroll list</h5>
+                        </div>
+                        <Row>
+                            <TableEnrollList />
+                        </Row>
+                    </div>
+                    : <p>oke</p>
+                    }
+
+                    { dataLogin.user && dataLogin.user.userType == 'Teacher' ?
+                        <div>
+                            <div class="d-flex jusfity-content-start">
+                                <h5>Your watch list</h5>
+                            </div>
+                            <Row>
+                                <TableWatchList />
+                            </Row>
+                        </div>
+                    : <p>oke</p>
+                    }
                 </div>
                 <br/>
                 <br/>
