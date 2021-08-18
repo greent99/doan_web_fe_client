@@ -15,13 +15,13 @@ export default function About() {
                 </div>
                 <div style={{width: '60%', marginTop: 30}}>
                     <div>
-                        <p>"Course Academy is independent New York coursestore and language school with location in Manhattan
+                        <p class="text-black">"Course Academy is independent New York coursestore and language school with location in Manhattan
                         and Brooklyn. We specialize in travel courses and language classes."</p>
                     </div>
                     <div class='row' style={{marginTop: 40}}>
                         <div class='col d-flex align-items-start flex-column'>
                             <h4>Our Story</h4>
-                            <p >
+                            <p class="text-black">
                                 The name courseworm was taken from the original name for New York International Airport,
                                 which was renamed JFK in December 1963
                                 <br />
@@ -35,7 +35,7 @@ export default function About() {
                         </div>
                         <div class='col d-flex align-items-start flex-column'>
                             <h4>Our Vision</h4>
-                            <p>
+                            <p class="text-black">
                                 One of the last travel coursestores in the contry, out Manhattan store carries a range of guidecourses (all 10% off)
                                 to suit the needs and lastest of every treveler and budget.
                             <br />

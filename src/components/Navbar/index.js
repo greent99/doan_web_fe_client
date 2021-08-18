@@ -30,9 +30,16 @@ function Navbar(props) {
           <Link to="/about">
             <li>About</li>
           </Link>
-          {dataLogin != null ? <Link to="/cart">
+          {dataLogin != null ? (
+
+            <Link to="/cart">
             <li>Profile</li>
-          </Link> : <></>}
+          </Link>
+
+          ) : <Link to="/login">
+            <li>Login</li>
+          </Link>
+          }
           
         </ul>
       </nav>

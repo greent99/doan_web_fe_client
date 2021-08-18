@@ -10,6 +10,7 @@ import { faEdit, faPlus  } from '@fortawesome/free-solid-svg-icons'
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useHistory } from 'react-router-dom'
 const axios = require('axios')
 
 export default function Cart() {
@@ -33,6 +34,7 @@ export default function Cart() {
       });
 
     const dataLogin = getDataLogin()
+    const history = useHistory()
 
     const [modal, setModal] = useState(false);
     const [listCategory, setListCategory] = useState([]);
@@ -191,6 +193,12 @@ export default function Cart() {
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
+                <div class="d-flex justify-content-end">
+                    <Button onClick={() => {
+                        localStorage.removeItem('userData')
+                        history.push('/login')
+                    }}>Logout</Button>
+                </div>
                 <hr></hr>
                 <div>
                     {dataLogin.user && dataLogin.user.userType == 'Student' ?
@@ -209,7 +217,7 @@ export default function Cart() {
                             <TableEnrollList />
                         </Row>
                     </div>
-                    : <h5>Profile for Admin will coming soon...</h5>
+                    : <></>
                     }
 
                     { dataLogin.user && dataLogin.user.userType == 'Teacher' ?
@@ -225,6 +233,10 @@ export default function Cart() {
                             </Row>
                         </div>
                         : <></>
+                    }
+
+                    {
+                        dataLogin.user && dataLogin.user.userType == 'Admin' ? <h5>Profile for Admin will coming soon...</h5> : <></>
                     }
                 </div>
                 <br/>
