@@ -29,7 +29,7 @@ export default function Cart() {
         status: yup.string().required('Status is a required Input').max(255),
         price: yup.number().required('Price is a required Input').min(0),
       });
-      const { register, handleSubmit, formState:{ errors } } = useForm({
+      const { register, handleSubmit, getValues, formState:{ errors } } = useForm({
         resolver: yupResolver(validationSchema)
       });
 
@@ -61,15 +61,16 @@ export default function Cart() {
         authors.map((author) => <option value={author.id}>{author.fullname}</option>);
 
     const onSubmit = async (values) => {
-        console.log(values.file)
+        console.log('?')
+        const files = getValues('file')
         const formData = new FormData();
-        formData.append('file', values.file[0]);
-        formData.append('name', values.name);
-        formData.append('author', values.author);
-        formData.append('fieldid', values.field);
-        formData.append('price', values.price);
-        formData.append('description', values.description);
-        formData.append('status', values.status);
+        formData.append('file', files[0]);
+        formData.append('name', getValues('name'));
+        formData.append('author', getValues('author'));
+        formData.append('fieldid', getValues('field'));
+        formData.append('price', getValues('price'));
+        formData.append('description', getValues('description'));
+        formData.append('status', getValues('status'));
         await axios.post(`http://localhost:5000/api/courses`, formData, {
             headers: {
             'Content-Type': 'multipart/form-data',
@@ -95,7 +96,7 @@ export default function Cart() {
                 <Modal isOpen={modal} toggle={toggle}>
                     <ModalHeader toggle={toggle}>Add Course</ModalHeader>
                     <ModalBody>
-                        <Form id="add-course-form" onSubmit={handleSubmit(onSubmit)}>
+                        <Form id="add-course-form" >
                             <FormGroup as={Row} className="mb-3">
                                 <Label htmlFor="name" column sm="3">
                                     Name<sup className="required-icon">*</sup>
@@ -189,7 +190,7 @@ export default function Cart() {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                    <Button color="primary" type="submit" form="add-course-form">Add</Button>{' '}
+                    <Button onClick={onSubmit} color="primary" type="submit" >Add</Button>{' '}
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                     </ModalFooter>
                 </Modal>

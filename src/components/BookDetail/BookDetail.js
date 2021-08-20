@@ -170,7 +170,7 @@ export default function BookDetail() {
                             <ReviewCustomer book = {course}/>
                         </Col>
                         <Col>
-                            <ReviewForm />
+                        {userData && checkInCourse ? <ReviewForm /> : <></>}
                         </Col>
                     </Row>
                 </div>

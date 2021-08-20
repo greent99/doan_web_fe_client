@@ -18,11 +18,14 @@ export default function TableEnrollList() {
     }, [])
     const renderEnrollList = (watchList) => {
         return watchList.map(item => {
+            const img_url = `http://localhost:5000${item.imgpath}`
             return (<tr>
                 <td>{item.name}</td>
                 <td>{item.price}</td>
                 <td>{item.fullname}</td>
-                <td>{item.imagepath}</td>
+                <td>
+                    <img height="50px" src={img_url}/>
+                </td>
             </tr>)
         })
     } 
